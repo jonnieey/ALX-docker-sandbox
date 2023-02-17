@@ -1,0 +1,3 @@
+[client]
+
+pager = pspg -s 6 -X --force-uniborder
