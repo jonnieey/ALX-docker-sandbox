@@ -3,7 +3,6 @@
 # Get username
 # Get base_directory - where user want to store files in local machine
 # Create necessary directories and files
-#
 
 echo "Enter Username to use in docker container: "
 read username
@@ -12,11 +11,19 @@ if [ -z "$username" ]; then
 	exit
 fi
 
-echo "Enter base directory to persist container data"
+echo "Enter base directory to persist container data: "
 read base_dir
 
 if [ -z "$base_dir" ]; then
 	echo "** Base directory to store files is needed **"
+	exit
+	# base_dir="$(pwd)"
+fi
+
+echo "Enter user password (archlinux sandbox): "
+read -s user_password;
+if [ -z "$user_password" ]; then
+	echo "** User password required **"
 	exit
 	# base_dir="$(pwd)"
 fi
@@ -32,12 +39,13 @@ cp ./custom.cnf.default $base_dir/.ALX/mysql/etc/conf.d/custom.cnf
 Arch_Linux_Dockerfile=$(cat <<EOF > ALX_Archlinux.Dockerfile
 FROM archlinux:latest
 RUN pacman -Syu --noconfirm \
-&& pacman -S openssh git gcc python python-pip \
-python-pynvim neovim perl github-cli mariadb-clients \
-sudo shellcheck --noconfirm 
+&& pacman -S openssh git gcc perl python python-pip sudo mariadb-clients \
+python-pynvim neovim github-cli shellcheck --noconfirm \
+&& pacman -Scc --noconfirm \
+&& find /var/cache/pacman/pkg -mindepth 1 -delete
 
 RUN useradd -ms /bin/bash $username \
-&& echo "$username:$username" | chpasswd \
+&& echo "$username:$user_password" | chpasswd \
 && usermod -aG wheel $username \
 && echo '%wheel ALL=(ALL) ALL' > /etc/sudoers
 
@@ -55,7 +63,7 @@ EOF
 
 MySQL_Dockerfile=$(cat <<EOF > ALX_MySQL.Dockerfile
 FROM mariadb:10.10
-RUN apt-get update -y && apt-get install mycli pspg -y
+RUN apt-get update -y && apt-get install mycli pspg -y && apt-get clean
 EOF
 )
 
