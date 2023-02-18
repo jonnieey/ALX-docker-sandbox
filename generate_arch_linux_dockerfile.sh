@@ -38,10 +38,10 @@ cp ./custom.cnf.default $base_dir/.ALX/mysql/etc/conf.d/custom.cnf
 
 Arch_Linux_Dockerfile=$(cat <<EOF > ALX_Archlinux.Dockerfile
 FROM archlinux:latest
-RUN pacman -Syu --noconfirm \
-&& pacman -S openssh git gcc perl python python-pip sudo mariadb-clients \
+RUN pacman --disable-download-timeout -Syu --noconfirm \
+&& pacman --disable-download-timeout -S openssh git gcc perl python python-pip sudo mariadb-clients \
 python-pynvim neovim github-cli shellcheck --noconfirm \
-&& pacman -Scc --noconfirm \
+&& pacman --disable-download-timeout -Scc --noconfirm \
 && find /var/cache/pacman/pkg -mindepth 1 -delete
 
 RUN useradd -ms /bin/bash $username \
