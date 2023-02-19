@@ -79,13 +79,14 @@ Using docker as driver for ALX Courswork
 
    > Enter Username to use in docker container:
   - It will prompt for username <mark>which will be used to create a sudoer user in 
-  docker container</mark>. **If username is empty it will exit**
+  arch linux sandbox docker container</mark>. **If username is empty it will exit**
+
    > Enter base directory to persist container data: 
   - It will prompt for base directory. <mark>This will be the directory in the host
   machine where  container directories and files will be persisted.
   Your projects and configuration will be stored there.</mark> **If base directory is empty it will exit**
 
-   > "Enter user password (archlinux sandbox): "
+   > Enter user password (archlinux sandbox):
   - It will prompt for user password. <mark>This will used as sudoer password for arch linux user.</mark> **If user password is empty it will exit. Prompt doesn't show input.**
   - Docker files will be generated, ALX-Archlinux.Dockerfile, docker-compose.yml ,etc.
 
@@ -116,9 +117,29 @@ Using docker as driver for ALX Courswork
   - Archlinux
   $ docker exec -it alx_archlinux_test_auto /bin/bash
 
+  - You'll have prompt in container (archlinux sandbox)
+  $ [username@host ~] ls -a
+    .  ..  .bash_history  .bash_logout  .bash_profile  .bashrc  .cache  .config  .local  .ssh  ALX
+
+  - To access mysql from archlinux container
+  $ mysql -hdb -uroot -p
+  [*] password is "password"
+
+  - Execute sql script to hbtnbd database
+  $ cat example.sql | mysql -hdb -uroot -p hbtndb
+
+
   - MySQL
   $ docker exec -it alx_mysql_test_auto mysql -uroot -hdb -p
-  [*] password is the username used during prompt
+  [*] password is "password"
 
   - MySQL using mycli (A Terminal Client for MySQL with AutoCompletion and Syntax Highlighting)
+  - It will connect via socket
   $ docker exec -it alx_mysql_test_auto mycli
+  [*] password is "password"
+
+  $ docker exec -it alx_mysql_test_auto /bin/bash
+  - Log in as root user to mysql container. (BE CAREFUL)
+
+  ```
+
