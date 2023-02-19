@@ -7,25 +7,25 @@
 echo "Enter Username to use in docker container: "
 read username
 if [ -z "$username" ]; then
-	echo "** Username must be defined"
-	exit
+    echo "** Username must be defined"
+    exit
 fi
 
 echo "Enter base directory to persist container data: "
 read base_dir
 
 if [ -z "$base_dir" ]; then
-	echo "** Base directory to store files is needed **"
-	exit
-	# base_dir="$(pwd)"
+    echo "** Base directory to store files is needed **"
+    exit
+    # base_dir="$(pwd)"
 fi
 
 echo "Enter user password (archlinux sandbox): "
 read -s user_password;
 if [ -z "$user_password" ]; then
-	echo "** User password required **"
-	exit
-	# base_dir="$(pwd)"
+    echo "** User password required **"
+    exit
+    # base_dir="$(pwd)"
 fi
 
 # Needed directories
@@ -39,17 +39,30 @@ cp ./custom.cnf.default $base_dir/.ALX/mysql/etc/conf.d/custom.cnf
 Arch_Linux_Dockerfile=$(cat <<EOF > ALX_Archlinux.Dockerfile
 FROM archlinux:latest
 RUN pacman --disable-download-timeout -Syu --noconfirm \
-&& pacman --disable-download-timeout -S openssh git gcc perl python python-pip sudo mariadb-clients \
-python-pynvim neovim github-cli shellcheck --noconfirm \
-&& pacman --disable-download-timeout -Scc --noconfirm \
-&& find /var/cache/pacman/pkg -mindepth 1 -delete
+&& pacman --disable-download-timeout --noconfirm -S \
+  gcc \
+  git \
+  github-cli \
+  mariadb-clients \
+  neovim \
+  openssh \
+  perl \
+  python \
+  python-pip \
+  python-pynvim \
+  shellcheck \
+  sudo \
+  valgrind \
+&& pacman -Scc --noconfirm && find /var/cache/pacman/pkg -mindepth 1 -delete
 
 RUN useradd -ms /bin/bash $username \
 && echo "$username:$user_password" | chpasswd \
 && usermod -aG wheel $username \
 && echo '%wheel ALL=(ALL) ALL' > /etc/sudoers
 
-RUN git clone https://github.com/holbertonschool/Betty && cd Betty && bash install.sh
+RUN git clone https://github.com/holbertonschool/Betty \
+&& cd Betty \
+&& bash install.sh
 
 USER $username
 WORKDIR /home/$username
@@ -63,7 +76,11 @@ EOF
 
 MySQL_Dockerfile=$(cat <<EOF > ALX_MySQL.Dockerfile
 FROM mariadb:10.10
-RUN apt-get update -y && apt-get install mycli pspg -y && apt-get clean
+RUN apt-get update -y \
+&& apt-get install -y \
+  mycli \
+  pspg \
+&& apt-get clean
 EOF
 )
 
@@ -98,8 +115,6 @@ services:
     tty: true
     environment:
       - MARIADB_ROOT_PASSWORD=password
-      - MARIADB_USER=$username
-      - MARIADB_PASSWORD=password
     privileged: true
     networks:
       - sandbox_network
