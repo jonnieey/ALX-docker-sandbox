@@ -88,55 +88,7 @@ Using docker as driver for ALX Courswork
 
 
   ```
-  <mark>** VOLUME PERMISSIONS PART 1 **
-
-  Note: I've had problems with volume permissions and not being able to modify mouted volumes in container.
-  Workaround (hacky) is to change the .ALX/arch/ALX permissions to allow rwx permissions to all
-
-  $ sudo chmod a+rwx "your_base_directory"/.ALX/arch/ALX
-
-  ** This will be the first part. Read on after we lauch our containers at the end
-  </mark>
-  ```
-
-
-   > Enter user password (archlinux sandbox):
-  - It will prompt for user password. <mark>This will used as sudoer password for arch linux user.</mark> **If user password is empty it will exit. Prompt doesn't show input.**
-  - Docker files will be generated, ALX-Archlinux.Dockerfile, docker-compose.yml ,etc.
-
-    **Optional:** Open and review to make sure they are generated correctly
-
-- Build docker images and containers,
-
-  `$ docker-compose up --build`
-
-  <mark>**should be run in same directory as generated docker-compose.yml**</mark>
-
-  **Wait for it to finish building images and containers, requires internet connection**
-
-  On successful build you should see something like 
-
-  ```...
-  alx_mysql_test_auto      | 2023-02-18  1:24:08 0 [Note] mariadbd: ready for connections.
-  alx_mysql_test_auto      | Version: '10.10.3-MariaDB-1:10.10.3+maria~ubu2204'  socket: '/run/mysqld/mysqld.sock'  port: 3306  mariadb.org binary distribution
-  ...
-  ```
-
- - To run in background after initial build
-
-    `$ docker-compose up -d`
-
-## connect to containers
-  ```
-  - Archlinux
-  $ docker exec -it alx_archlinux_test_auto /bin/bash
-
-  - You'll have prompt in container (archlinux sandbox)
-  $ [username@host ~] ls -a
-    .  ..  .bash_history  .bash_logout  .bash_profile  .bashrc  .cache  .config  .local  .ssh  ALX
-
-  ```
-  **VOLUME PERMISSIONS PART 1**
+  ** VOLUME PERMISSIONS PART 1 **
 
   Note: I've had problems with volume permissions and not being able to modify mouted volumes in container.
   Workaround (hacky) is to change the .ALX/arch/ALX permissions to allow rwx permissions to all
@@ -179,19 +131,19 @@ Using docker as driver for ALX Courswork
   $ docker exec -it alx_archlinux_test_auto /bin/bash
 
   - You'll have prompt in container (archlinux sandbox)
-  $ [username@host ~] ls -a
+    [username@host ~]$ ls -a
     .  ..  .bash_history  .bash_logout  .bash_profile  .bashrc  .cache  .config  .local  .ssh  ALX
 
   - To access mysql from archlinux container
-  $ mysql -hdb -uroot -p
+  [username@host ~]$ mysql -hdb -uroot -p
   [*] password is "password"
 
   - Execute sql script to hbtnbd database
-  $ cat example.sql | mysql -hdb -uroot -p hbtndb
+  [username@host ~]$ cat example.sql | mysql -hdb -uroot -p hbtndb
   ```
 
   ```
-  <mark>** VOLUME PERMISSIONS PART 2 **
+  ** VOLUME PERMISSIONS PART 2 **
 
   - Change to ALX directory we changed permissions 
   - make sure you are in the container and not host system
@@ -220,7 +172,6 @@ Using docker as driver for ALX Courswork
 
   - Relaunch containers (in background)
   $ docker-compose up -d
-   </mark>
   ```
 
  ```
@@ -236,29 +187,11 @@ Using docker as driver for ALX Courswork
   $ docker exec -it alx_mysql_test_auto /bin/bash
   - Log in as root user to mysql container. (BE CAREFUL)
 
-  ```
-
-
-  ```
   - To access mysql from archlinux container
-  $ mysql -hdb -uroot -p
+  [username@host ~]$ mysql -hdb -uroot -p
   [*] password is "password"
 
   - Execute sql script to hbtnbd database
-  $ cat example.sql | mysql -hdb -uroot -p hbtndb
-
-
-  - MySQL
-  $ docker exec -it alx_mysql_test_auto mysql -uroot -hdb -p
-  [*] password is "password"
-
-  - MySQL using mycli (A Terminal Client for MySQL with AutoCompletion and Syntax Highlighting)
-  - It will connect via socket
-  $ docker exec -it alx_mysql_test_auto mycli
-  [*] password is "password"
-
-  $ docker exec -it alx_mysql_test_auto /bin/bash
-  - Log in as root user to mysql container. (BE CAREFUL)
-
+  [username@host ~]$ cat example.sql | mysql -hdb -uroot -p hbtndb
   ```
 
