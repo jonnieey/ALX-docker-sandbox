@@ -114,7 +114,10 @@ services:
       - $base_dir/.ALX/mysql/myclirc:/root/.myclirc
     tty: true
     environment:
-      - MARIADB_ROOT_PASSWORD=password
+      MARIADB_ROOT_PASSWORD: 'password'
+      MARIADB_USER: '$username'
+      MARIADB_PASSWORD: 'password'
+      MARIADB_DATABASE: 'alxdb'
     privileged: true
     networks:
       - sandbox_network
